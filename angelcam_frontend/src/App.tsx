@@ -1,15 +1,15 @@
 // src/App.tsx
 import React from "react";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import LoginForm from "./components/auth/LoginForm";
+import { ThemeProvider, createTheme } from "@mui/material";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
 
 const theme = createTheme();
 
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <LoginForm />
+      <RouterProvider router={router(null)} />
     </ThemeProvider>
   );
 };

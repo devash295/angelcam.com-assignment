@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$8$4ea16^#(wgdq@eu+=_l^=1*q^u9s&6zso=@wh0f6q7y9s+$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -159,3 +163,9 @@ LOGGING = {
         },
     },
 }
+
+
+
+ANGELCAM_CLIENT_ID = os.getenv('ANGELCAM_CLIENT_ID')
+ANGELCAM_CLIENT_SECRET = os.getenv('ANGELCAM_CLIENT_SECRET')
+API_ENDPOINT = os.getenv('API_ENDPOINT')
