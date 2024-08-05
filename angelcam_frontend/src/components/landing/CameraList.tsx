@@ -1,6 +1,7 @@
 // src/components/CameraList.tsx
 import React, { useEffect, useState } from "react";
 import { Camera } from "../../types/cameraTypes";
+import axiosInstance from "../api/axiosInstance";
 
 const CameraList: React.FC = () => {
   const [cameras, setCameras] = useState<Camera[]>([]);
@@ -15,20 +16,13 @@ const CameraList: React.FC = () => {
       }
 
       try {
-        const response = await fetch(
-          "https://api.angelcam.com/v1/shared-cameras/",
-          {
-            headers: {
-              Authorization: `PersonalAccessToken ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
+        const response = await axiosInstance.get("/cameras");
+        if (!response) {
           throw new Error("Failed to fetch cameras");
         }
+        console.log("🟢🟢", response);
+        const data = await response.data;
 
-        const data = await response.json();
         setCameras(data.results);
       } catch (err: any) {
         setError(err.message);

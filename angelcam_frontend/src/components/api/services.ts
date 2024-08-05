@@ -1,8 +1,12 @@
+import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
 const services = {
   login: async (token: string) => {
-    const response = await axiosInstance.post("/auth/login", { token });
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+      { token: token }
+    );
     return response.data;
   },
 
