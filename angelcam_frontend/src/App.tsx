@@ -7,7 +7,6 @@ import router from "./routes";
 const theme = createTheme();
 
 const App: React.FC = () => {
-  // Check for the access token cookie
   const token = Cookies.get("personalAccessToken");
   const user = token ? true : null;
 

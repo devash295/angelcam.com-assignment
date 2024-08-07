@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../api/axiosInstance";
 import Cookies from "js-cookie";
 import services from "../api/services";
 
@@ -18,15 +17,12 @@ const LoginForm: React.FC = () => {
       alert("Invalid token format");
       return;
     }
-    const response = await services.login(token);
-    console.log(response);
-    // Save the token in localStorage
-    Cookies.set("personalAccessToken", token, { expires: 7 }); //in 7 days
+    await services.login(token);
+    // Save the token in cookies
+    Cookies.set("personalAccessToken", token, { expires: 7 }); // Expires in 7 days
 
     // Navigate to the home page
-    navigate("/");
-
-    console.log(token);
+    navigate("/home");
   };
 
   return (

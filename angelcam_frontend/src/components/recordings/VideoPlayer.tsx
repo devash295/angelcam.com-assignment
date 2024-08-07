@@ -1,80 +1,109 @@
-// src/components/VideoPlayer.tsx
-import React, { useEffect, useRef } from "react";
+import * as React from "react";
 import videojs from "video.js";
-import { Box, Button } from "@mui/material";
 import "video.js/dist/video-js.css";
+import mpegts from "mpegts.js";
 
 interface IVideoPlayerProps {
-  options: videojs.PlayerOptions;
+  url: string;
+  format: string;
 }
 
-const VideoPlayer: React.FC<IVideoPlayerProps> = ({ options }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const playerRef = useRef<videojs.Player | null>(null);
+const initialOptions: videojs.PlayerOptions = {
+  controls: true,
+  fluid: true,
+  controlBar: {
+    volumePanel: {
+      inline: false,
+    },
+  },
+};
 
-  useEffect(() => {
-    if (videoRef.current) {
-      playerRef.current = videojs(videoRef.current, options);
+const VideoPlayer: React.FC<IVideoPlayerProps> = ({ url, format }) => {
+  const videoNode = React.useRef<HTMLVideoElement | null>(null);
+  const player = React.useRef<videojs.Player | null>(null);
+  const mpegtsPlayer = React.useRef<any>(null);
 
-      return () => {
-        if (playerRef.current) {
-          playerRef.current.dispose();
+  React.useEffect(() => {
+    const setupPlayer = () => {
+      if (videoNode.current) {
+        if (player.current) {
+          player.current.dispose();
         }
-      };
-    }
-  }, [options]);
 
-  const playStream = async () => {
-    await fetch(
-      "https://rec-streamer-eu-central-1.angelcam.com/recording/streams/df0600b7487a44d480217db7713720d3/play/"
-    );
-    playerRef.current?.play();
-  };
+        if (format === "mjpeg") {
+          const imgElement = document.createElement("img");
+          imgElement.src = url;
+          imgElement.alt = "MJPEG Stream";
+          imgElement.style.width = "100%";
+          imgElement.style.height = "100%";
 
-  const pauseStream = async () => {
-    await fetch(
-      "https://rec-streamer-eu-central-1.angelcam.com/recording/streams/df0600b7487a44d480217db7713720d3/pause/"
-    );
-    playerRef.current?.pause();
-  };
+          if (videoNode.current && videoNode.current.parentNode) {
+            videoNode.current.parentNode.replaceChild(
+              imgElement,
+              videoNode.current
+            );
+          }
+        } else {
+          player.current = videojs(
+            videoNode.current,
+            initialOptions,
+            function () {
+              const videoJsPlayer = this;
 
-  const setPlaybackSpeed = async (speed: number) => {
-    await fetch(
-      `https://rec-streamer-eu-central-1.angelcam.com/recording/streams/df0600b7487a44d480217db7713720d3/speed/?rate=${speed}`
-    );
-    playerRef.current?.playbackRate(speed);
-  };
+              if (format === "hls") {
+                videoJsPlayer.src({ src: url, type: "application/x-mpegURL" });
+              } else if (format === "mpegts") {
+                if (mpegts) {
+                  mpegtsPlayer.current = mpegts.createPlayer({
+                    type: "mpegts",
+                    isLive: true,
+                    url: url,
+                  });
+                  if (videoNode.current) {
+                    mpegtsPlayer.current.attachMediaElement(videoNode.current);
+                    mpegtsPlayer.current.load();
+                    mpegtsPlayer.current.play();
+                  }
+                }
+              } else {
+                videoJsPlayer.src({ src: url, type: `video/${format}` });
+              }
+            }
+          );
+        }
+      }
+    };
+
+    const timer = setTimeout(() => {
+      setupPlayer();
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+      if (mpegtsPlayer.current) {
+        mpegtsPlayer.current.destroy();
+        mpegtsPlayer.current = null;
+      }
+      if (player.current) {
+        player.current.dispose();
+        player.current = null;
+      }
+    };
+  }, [url, format]);
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box sx={{ mb: 2 }} data-vjs-player>
-        <video ref={videoRef} className="video-js vjs-default-skin" />
-      </Box>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={playStream}
-        sx={{ mx: 1 }}
-      >
-        Play
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={pauseStream}
-        sx={{ mx: 1 }}
-      >
-        Pause
-      </Button>
-      <Button
-        variant="contained"
-        color="success"
-        onClick={() => setPlaybackSpeed(1.5)}
-        sx={{ mx: 1 }}
-      >
-        1.5x Speed
-      </Button>
-    </Box>
+    <div data-vjs-player>
+      <div
+        ref={(videoNodeWrapper) => {
+          if (videoNodeWrapper) {
+            const videoElement = document.createElement("video");
+            videoElement.className = "video-js";
+            videoNodeWrapper.appendChild(videoElement);
+            videoNode.current = videoElement;
+          }
+        }}
+      />
+    </div>
   );
 };
 

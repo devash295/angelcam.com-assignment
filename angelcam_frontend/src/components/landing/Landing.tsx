@@ -1,9 +1,20 @@
-const Landing = () => {
+import React from "react";
+import { Container, Box } from "@mui/material";
+import CameraList from "./CameraList";
+
+const Landing: React.FC = () => {
   return (
-    <div>
-      <h1>Welcome to Angelcam</h1>
-      <p>Sign up to see your cameras</p>
-    </div>
+    <Container maxWidth="xl">
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+      >
+        <CameraList />
+      </Box>
+    </Container>
   );
 };
 

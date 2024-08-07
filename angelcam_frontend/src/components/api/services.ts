@@ -11,7 +11,31 @@ const services = {
   },
 
   getSharedCameras: async () => {
-    const response = await axiosInstance.get("/shared-cameras");
+    const response = await axiosInstance.get("/getSharedCameras");
+    return response.data;
+  },
+
+  getCameraStreams: async (cameraId: string) => {
+    const response = await axiosInstance.get(`/getCameraStreams/${cameraId}`);
+    return response.data;
+  },
+
+  getCameraRecordings: async (cameraId: string) => {
+    const response = await axiosInstance.get(
+      `/getCameraRecordings/${cameraId}`
+    );
+    return response.data;
+  },
+
+  getRecordingStream: async (cameraId: string, start: string) => {
+    const response = await axiosInstance.get(
+      `/getRecordingStream/${cameraId}`,
+      {
+        params: {
+          start: start,
+        },
+      }
+    );
     return response.data;
   },
 };
