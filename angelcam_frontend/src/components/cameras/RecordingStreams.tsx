@@ -12,7 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import VideoPlayer from "../recordings/VideoPlayer";
-import services from "../api/services";
+import services from "../../api/services";
 
 const RecordingStreams = () => {
   const { cameraId } = useParams();

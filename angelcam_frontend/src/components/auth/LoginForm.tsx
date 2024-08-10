@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import services from "../api/services";
+import services from "../../api/services";
 
 const LoginForm: React.FC = () => {
   const TOKEN_REGEX = /^[a-zA-Z0-9]{40}$/;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import services from "../api/services";
+import services from "../../api/services";
 import {
   CircularProgress,
   Box,

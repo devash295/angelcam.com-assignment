@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Camera } from "../../types/cameraTypes";
-import services from "../api/services";
+import services from "../../api/services";
 import {
   CircularProgress,
   Box,
