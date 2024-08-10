@@ -6,23 +6,26 @@ import mpegts from "mpegts.js";
 interface IVideoPlayerProps {
   url: string;
   format: string;
+  controls?: boolean; // Optional boolean prop to enable/disable controls
 }
 
-const initialOptions: videojs.PlayerOptions = {
-  controls: true,
-  fluid: true,
-  controlBar: {
-    volumePanel: {
-      inline: false,
-    },
-  },
-};
-
-const VideoPlayer: React.FC<IVideoPlayerProps> = ({ url, format }) => {
+const VideoPlayer: React.FC<IVideoPlayerProps> = ({
+  url,
+  format,
+  controls = true,
+}) => {
   const videoNode = React.useRef<HTMLVideoElement | null>(null);
   const player = React.useRef<videojs.Player | null>(null);
   const mpegtsPlayer = React.useRef<any>(null);
-
+  const initialOptions: videojs.PlayerOptions = {
+    controls: controls,
+    fluid: true,
+    controlBar: {
+      volumePanel: {
+        inline: false,
+      },
+    },
+  };
   React.useEffect(() => {
     const setupPlayer = () => {
       if (videoNode.current) {
@@ -49,7 +52,9 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({ url, format }) => {
             initialOptions,
             function () {
               const videoJsPlayer = this;
-
+              if (!controls) {
+                videoJsPlayer.controls(false);
+              }
               if (format === "hls") {
                 videoJsPlayer.src({ src: url, type: "application/x-mpegURL" });
               } else if (format === "mpegts") {

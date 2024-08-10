@@ -38,6 +38,34 @@ const services = {
     );
     return response.data;
   },
+
+  playRecordedStream: async (url: string) => {
+    const response = await axiosInstance.post(`/playRecordedStream`, {
+      params: {
+        playUrl: url,
+      },
+    });
+    return response.data;
+  },
+
+  pauseRecordedStream: async (url: string) => {
+    const response = await axiosInstance.post(`/pauseRecordedStream`, {
+      params: {
+        pauseUrl: url,
+      },
+    });
+    return response.data;
+  },
+
+  speedRecordedStream: async (url: string, speed: number) => {
+    const response = await axiosInstance.post(`/speedRecordedStream`, {
+      params: {
+        speedUrl: url,
+        speed,
+      },
+    });
+    return response.data;
+  },
 };
 
 export default services;

@@ -88,11 +88,11 @@ const CameraRecordings = () => {
           marginTop={2}
         >
           <Box flex={2} overflow="auto">
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" marginBottom={1}>
               <IconButton onClick={() => navigate(-1)}>
                 <ArrowBackIcon />
               </IconButton>
-              <Typography variant="h4" gutterBottom fontWeight="bold" ml={1}>
+              <Typography fontWeight="bold" ml={1} fontSize={30}>
                 Live Stream
               </Typography>
             </Box>
